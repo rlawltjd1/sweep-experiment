@@ -12,15 +12,15 @@ Minimal-pair(Cell A/B/C)에서 뽑은 스티어링 벡터를 Llama-3.2-3B의 특
 ## 1. 전체 흐름
 
 ```
-[Week 1 · 로컬]  week1_pipeline.ipynb
+[Week 1]  week1_pipeline.ipynb
      평가셋 잠금 · probe 학습 · B0 측정
-        │  (산출물 업로드)
+        │  
         ▼
-[Week 2 · 서버]  submit_sweep.sh → week2_sweep.py
+[Week 2]  submit_sweep.sh → week2_sweep.py
      벡터 4종 생성 · coarse+fine sweep
         │  (sweep csv 다운로드)
         ▼
-[Week 3 · 로컬/서버]  week3_analysis.ipynb
+[Week 3]  week3_analysis.ipynb
      ablation · 유의성 검정 · axis 연결 · 최종 표/그래프
 ```
 
