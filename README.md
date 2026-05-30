@@ -278,6 +278,21 @@ sweep 결과로 **해석을 굳히는** 단계. 새 분석은 추가하지 않�
 **v_harm**
 - 기존 문서: mean-pool 파일 재사용 => 실제 한 것: last-token으로 재추출(위와 같은 이유. B2 비교 공정성)
 
+
+**논의 사항**
+기존 문서에서는 v_AB, v_AC의 vector extraction과 0528 harm-dominant layer 분석이 mean-pool hidden state 기준으로 설명되어 있었다. 반면 B0/probe는 causal LM의 최종 판단 위치와 직접 연결되는 last-token hidden state를 사용하는 것으로 계획되어 있었고, steering intervention 역시 해당 layer의 마지막 토큰 위치에 +α·v를 주입하는 방식으로 정리되어 있었다. 즉, 기존 계획에는 vector extraction 및 layer prior는 mean-pool 기준, B0/probe 및 steering 주입 위치는 last-token 기준이라는 불일치가 있었다.
+
+이에 따라 현재 구현에서는 B0/probe가 last-token representation을 사용하고 steering 주입도 마지막 토큰 위치에 적용되는 점을 고려하여, B2 비교 공정성을 위해 v_harm 역시 기존 mean-pool 파일을 재사용하지 않고 last-token 기준으로 재추출하도록 하였다.
+
+다만 이 변경으로 인해 0528 mean-pool 기반 harm-dominant layer 및 best layer prior와 현재 last-token 기반 sweep 결과는 동일 조건의 layer 분석으로 직접 비교하기 어렵다. mean-pool은 문장 전체 token representation을 평균낸 sentence-level signal에 가깝고, last-token은 causal LM의 다음 토큰 예측 및 최종 판단 위치와 더 직접적으로 연결된 signal이므로, 두 방식에서 강하게 나타나는 layer가 달라질 수 있다.
+
+따라서 향후 main pooling 기준을 명시적으로 결정해야 한다. 선택지는 크게 두 가지이다. 
+- 첫째, 현재 구현처럼 last-token을 main setting으로 고정하여 B0/probe, vector extraction, steering 주입 위치를 모두 causal LM의 최종 판단 위치 기준으로 통일하는 방식이다. 이 경우 0528 mean-pool 기반 harm-dominant layer 및 best layer prior를 그대로 사용하지 않고, 동일한 분석을 last-token 기준으로 재수행하여 layer prior를 재산출해야 한다.
+- 둘째, 기존 0528 분석과의 연속성을 유지하기 위해 mean-pool을 main setting으로 두되, 그에 맞춰 B0/probe와 steering 방식까지 mean-pool 기준으로 재정의 및 재구현하는 방식이다. 
+
+가장 안전한 방법은 last-token과 mean-pool을 모두 ablation으로 비교하여 pooling 방식 자체가 성능 및 best layer 선택에 미치는 영향을 확인하는 것이다.
+
+
 ## 6. 알려진 한계 / 주의
 
 - harm-dominant 레이어·`|z|` 수치는 mean-pool 공간 산출 → last-token best layer가 다를 수 있음(harm-dominant 레이어를 last-token 기준으로 재산출해야할 수 있음).
