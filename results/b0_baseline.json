@@ -1,0 +1,22 @@
+{
+  "model": "meta-llama/Llama-3.2-3B",
+  "probe": "logistic_regression",
+  "layer": -1,
+  "results": {
+    "eval_latent_v2": {
+      "macro_f1": 0.5902772490673548,
+      "hate_recall": 0.549,
+      "n": 2000
+    },
+    "eval_toxigen_v1": {
+      "macro_f1": 0.5853791598472449,
+      "hate_recall": 0.4230769230769231,
+      "n": 1560
+    },
+    "sanity_hatexplain": {
+      "macro_f1": 0.6908871938980329,
+      "hate_recall": 0.752,
+      "n": 500
+    }
+  }
+}
