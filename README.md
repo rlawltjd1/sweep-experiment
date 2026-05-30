@@ -76,11 +76,11 @@ pandas, numpy, scipy, matplotlib, joblib, tqdm
 ```
 Llama-3.2-3B · HateXplain · ToxiGen은 gated이므로 HF 토큰 필요(`huggingface-cli login` 또는 `HF_TOKEN`).
 
-### Week 1 (로컬, GPU)
+### Week 1 
 `week1_pipeline.ipynb`를 위에서부터 실행. **입력으로 `data/eval/eval_latent_v2.csv`가 미리 있어야 함**(Latent Hatred 2,000건, `subtype` 포함). 끝나면 `results/`·`data/eval/`·`src/eval/`에 산출물이 생긴다.
 
-### Week 2 (서버)
-Week 1 산출물 + cell csv를 서버에 업로드 후:
+### Week 2
+Week 1 산출물이 존재한다면:
 ```bash
 sbatch submit_sweep.sh        # precheck 통과하면 week2_sweep.py 실행
 # 또는 직접:
@@ -90,7 +90,7 @@ python week2_sweep.py --batch 64 --all-layers --eval latent
 ```
 walltime에 잘려도 **같은 명령 재제출 시 끝난 셋업은 건너뛰고 이어서 돈다.**
 
-### Week 3 (로컬/서버)
+### Week 3 
 sweep csv가 `results/`에 있는 상태에서 `week3_analysis.ipynb`를 실행.
 
 ---
@@ -155,7 +155,7 @@ sweep csv가 `results/`에 있는 상태에서 `week3_analysis.ipynb`를 실행.
 | `results/v_AB.npy` | npy (29,3072) | target 축 벡터 (sweep에서 재생성됨) |
 | `data/hatexplain_train.csv` | csv | (HF 생성 시) HateXplain 전체 풀; probe는 이 중 90% 사용 |
 
-긴 시간 소요 없으므로 서버에서 Week 1 ipynb 노트북부터 다시 돌리는 것 권장
+이미 로컬에서 돌린 산출물도 함께 push 되어 있지만 긴 시간 소요 없으므로 서버에서 처음부터 Week 1 ipynb 노트북부터 다시 돌리는 것 권장
 
 ---
 
